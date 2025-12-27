@@ -1,0 +1,59 @@
+# Android fstab file.
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+# mount point               fstype             device                 device2                                   flags
+# /metadata                 ext4                 /dev/block/by-name/metadata                           flags=display="metadata";wrappedkey;backup=1
+# /data                     f2fs                 /dev/block/bootdevice/by-name/userdata                flags=fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized+wrappedkey_v0;metadata_encryption=aes-256-xts:wrappedkey_v0;keydirectory=/metadata/vold/metadata_encryption
+# /metadata                 ext4                 /dev/block/by-name/metadata                           flags=display="metadata";wrappedkey;backup=1
+# /data                     f2fs                 /dev/block/bootdevice/by-name/userdata                flags=fileencryption=ice;wrappedkey;keydirectory=/metadata/vold/metadata_encryption
+# /storage                  ext4                 /data/media/0                                         flags=display="Internal Storage";usermrf;backup=1;fsflags="bind";removable
+/metadata                 ext4                 /dev/block/by-name/metadata                           flags=display="metadata";backup=1
+/data                     f2fs                 /dev/block/bootdevice/by-name/userdata                flags=fileencryption=ice;wrappedkey
+
+# super
+/system_root              ext4                 /dev/block/mapper/system                              flags=display="system";slotselect;logical
+/product                  ext4                 /dev/block/mapper/product                             flags=display="product";slotselect;logical
+/vendor                   ext4                 /dev/block/mapper/vendor                              flags=display="vendor";slotselect;logical
+
+/boot                     emmc                 /dev/block/bootdevice/by-name/boot                    flags=display="boot";slotselect;backup=1;flashimg=1
+/recovery                 emmc                 /dev/block/bootdevice/by-name/recovery                flags=display="recovery";slotselect;backup=1;flashimg=1
+/dtbo                     emmc                 /dev/block/bootdevice/by-name/dtbo                    flags=display="dtbo";slotselect;backup=1;flashimg=1
+
+# avb
+/vbmeta                   emmc                 /dev/block/bootdevice/by-name/vbmeta                  flags=display="vbmeta";slotselect;backup=1;flashimg=1
+/vbmeta_system            emmc                 /dev/block/bootdevice/by-name/vbmeta_system           flags=display="vbmeta_system";slotselect;backup=1;flashimg=1
+/misc                     emmc                 /dev/block/bootdevice/by-name/misc
+
+
+# Firmware partitions
+/drm                      emmc                 /dev/block/by-name/drm                                flags=display="DRM";backup=1;flashimg=1
+/modem                    vfat                 /dev/block/bootdevice/by-name/modem                   flags=display="modem";slotselect;fsflags="ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0 wait"
+/modem_img                emmc                 /dev/block/bootdevice/by-name/modem                   flags=display="modem";slotselect;backup=1;flashimg=1
+/dsp                      ext4                 /dev/block/bootdevice/by-name/dsp                     flags=display="dsp";slotselect
+/dsp_image                emmc                 /dev/block/bootdevice/by-name/dsp                     flags=display="dsp";slotselect;backup=1;flashimg=1
+/persist                  ext4                 /dev/block/bootdevice/by-name/persist                 flags=display="persist"
+/persist_image            emmc                 /dev/block/bootdevice/by-name/persist                 flags=display="persist";backup=1;flashimg=1
+
+# LGE partitions
+/ftm                      emmc                 /dev/block/bootdevice/by-name/ftm                     flags=display="FTM";slotselect;backup=1;flashimg=1
+/laf                      emmc                 /dev/block/bootdevice/by-name/laf                     flags=display="LGE laf";slotselect;backup=1;flashimg=1
+/persist-lg               ext4                 /dev/block/bootdevice/by-name/p_persist_lg            flags=display="p_persist_lg"
+/persist-lg_image         emmc                 /dev/block/bootdevice/by-name/p_persist_lg            flags=display="p_persist_lg";backup=1;flashimg=1
+/frp                      emmc                 /dev/block/bootdevice/by-name/frp                     flags=display="Google FRP lock";backup=1;flashimg=1
+/OP                       ext4                 /dev/block/by-name/OP                                 flags=display="OP";slotselect
+/OP_image                 emmc                 /dev/block/by-name/OP                                 flags=display="OP";slotselect;backup=1;flashimg=1
+/abl                      emmc                 /dev/block/bootdevice/by-name/abl                     flags=display="LGE abl";slotselect;backup=1;flashimg=1
+/sid                      emmc                 /dev/block/bootdevice/by-name/sid                     flags=display="LGE sid (OPID)";slotselect;backup=1;flashimg=1
+
+# EFS
+/modemst1                 emmc                 /dev/block/bootdevice/by-name/modemst1                flags=display="efs";backup=1
+/modemst2                 emmc                 /dev/block/bootdevice/by-name/modemst2                flags=backup=1;subpartitionof=/modemst1
+/mdm1m9kefs1              emmc                 /dev/block/bootdevice/by-name/mdm1m9kefs1             flags=backup=1;subpartitionof=/modemst1
+/mdm1m9kefs2              emmc                 /dev/block/bootdevice/by-name/mdm1m9kefs2             flags=backup=1;subpartitionof=/modemst1
+/mdm1m9kefs3              emmc                 /dev/block/bootdevice/by-name/mdm1m9kefs3             flags=backup=1;subpartitionof=/modemst1
+/mdm1m9kefsc              emmc                 /dev/block/bootdevice/by-name/mdm1m9kefsc             flags=backup=1;subpartitionof=/modemst1
+
+# Removable storage
+/external_sd              auto                 /dev/block/mmcblk0p1    /dev/block/mmcblk0            flags=display="External SD";storage;wipeingui;removable;fsflags="utf8"
+/usb_otg                  auto                 /dev/block/sdh2         /dev/block/sdh1               flags=display="usb-otg";storage;wipeingui;removable;fsflags="utf8"
